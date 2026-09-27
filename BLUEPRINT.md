@@ -7,7 +7,7 @@
 | Item | Nilai |
 |---|---|
 | Nama brand (sementara) | **Global Klinik** — *Care Without Borders* |
-| Alamat sementara | `https://global-klinik.<subdomain-akun>.workers.dev` (Cloudflare Workers) |
+| Alamat sementara | **https://global-klinik.app-desa.workers.dev** (Cloudflare Workers) · aplikasi: `/app/` · layar antrian: `/antrian` |
 | Aplikasi | Website publik (SSR, SEO) + Aplikasi PWA (bisa di-install di HP, tablet, laptop, PC) |
 | Bahasa | Indonesia (default) & English |
 | Tema | Light / Dark (otomatis mengikuti perangkat, bisa diganti manual) |
@@ -344,3 +344,4 @@ Aplikasi terbuka layar penuh, punya ikon sendiri, shortcut (Booking, Portal, Ant
 |---|---|
 | 2026-09-27 | Blueprint v1 disusun; resource Cloudflare dibuat; implementasi Fase 1 dimulai |
 | 2026-09-28 | Fase 1 selesai: website SSR, PWA (admin/dokter/perawat/apotek/kasir/lab/portal), 45 modul CRUD, PDF, laporan, backup R2, deploy otomatis via GitHub Actions; 51 uji alur kerja end-to-end lulus |
+| 2026-09-28 | Live di https://global-klinik.app-desa.workers.dev — migrasi D1 + data demo + 11 akun awal terpasang; smoke test semua halaman 200 |

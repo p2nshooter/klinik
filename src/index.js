@@ -273,7 +273,7 @@ export default {
     const rows = await q(env, "SELECT * FROM appointments WHERE date = ? AND status IN ('confirmed','pending') AND COALESCE(reminded,0) = 0 LIMIT 200", tomorrow);
     for (const a of rows) {
       try {
-        await notify(env, { template: 'reminder', data: apptData(bundle, a, ctx.site || 'https://' + (env.SITE_HOST || 'global-klinik.workers.dev')), phone: a.phone, email: a.email, patientId: a.patient_id, ref: a.booking_no });
+        await notify(env, { template: 'reminder', data: apptData(bundle, a, ctx.site || 'https://global-klinik.app-desa.workers.dev'), phone: a.phone, email: a.email, patientId: a.patient_id, ref: a.booking_no });
         await run(env, 'UPDATE appointments SET reminded = 1 WHERE id = ?', a.id);
       } catch (e) {
         console.error('reminder', a.booking_no, e);
