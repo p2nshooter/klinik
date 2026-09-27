@@ -1,0 +1,29 @@
+{
+  "id": "/app/",
+  "name": "Global Klinik — Digital Clinic",
+  "short_name": "Global Klinik",
+  "description": "Booking dokter, portal pasien, rekam medis elektronik, farmasi, kasir, dan manajemen klinik multi-cabang.",
+  "start_url": "/app/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#071312",
+  "theme_color": "#0F766E",
+  "orientation": "any",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["medical", "health", "business", "productivity"],
+  "icons": [
+    { "src": "/assets/img/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Booking Dokter", "short_name": "Booking", "url": "/booking", "icons": [{ "src": "/assets/img/icon-96.png", "sizes": "96x96" }] },
+    { "name": "Portal Pasien", "short_name": "Portal", "url": "/app/#/portal", "icons": [{ "src": "/assets/img/icon-96.png", "sizes": "96x96" }] },
+    { "name": "Dashboard Klinik", "short_name": "Dashboard", "url": "/app/#/dashboard", "icons": [{ "src": "/assets/img/icon-96.png", "sizes": "96x96" }] },
+    { "name": "Layar Antrian", "short_name": "Antrian", "url": "/antrian", "icons": [{ "src": "/assets/img/icon-96.png", "sizes": "96x96" }] }
+  ]
+}

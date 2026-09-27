@@ -1,0 +1,38 @@
+// Website UI strings (content itself is bilingual in the CMS).
+export const STR = {
+  id: {
+    home: 'Beranda', about: 'Tentang Kami', services: 'Layanan', doctors: 'Dokter', schedule: 'Jadwal Dokter', facilities: 'Fasilitas', branches: 'Cabang', booking: 'Booking', pricing: 'Harga', promos: 'Promo', testimonials: 'Testimoni', blog: 'Artikel Kesehatan', faq: 'FAQ', contact: 'Kontak', privacy: 'Kebijakan Privasi', terms: 'Syarat & Ketentuan', checkBooking: 'Cek Booking', queue: 'Antrian', login: 'Masuk', portal: 'Portal Pasien',
+    bookNow: 'Booking Sekarang', bookDoctor: 'Booking Dokter', seeAll: 'Lihat semua', readMore: 'Selengkapnya', from: 'mulai', perSession: 'per sesi',
+    footerLinks: 'Tautan', footerServices: 'Layanan', footerContact: 'Hubungi Kami', newsletter: 'Info & promo kesehatan', newsletterBtn: 'Langganan', emailPh: 'Email Anda',
+    rights: 'Hak cipta dilindungi.', installApp: 'Install Aplikasi', whatsapp: 'Chat WhatsApp', emergency: 'Darurat',
+    experience: 'tahun pengalaman', education: 'Pendidikan', practiceSchedule: 'Jadwal Praktik', languages: 'Bahasa', telemedicine: 'Telemedicine', available: 'Tersedia', consultFee: 'Tarif konsultasi',
+    allPoli: 'Semua poli', allBranch: 'Semua cabang', searchDoctor: 'Cari nama dokter…', day: 'Hari', time: 'Jam', noSchedule: 'Belum ada jadwal',
+    openMap: 'Buka di Google Maps', hours: 'Jam buka', phone: 'Telepon', address: 'Alamat', doctorsHere: 'Dokter di cabang ini', servicesHere: 'Layanan di cabang ini',
+    priceList: 'Daftar harga layanan', packages: 'Paket pemeriksaan', mostPopular: 'Paling populer', choose: 'Pilih paket', branchPrice: 'Harga cabang',
+    validUntil: 'Berlaku hingga', useCode: 'Gunakan kode', writeTesti: 'Bagikan pengalaman Anda', send: 'Kirim', name: 'Nama', message: 'Pesan', yourRating: 'Rating', yourStory: 'Cerita Anda',
+    related: 'Artikel terkait', by: 'oleh', minutesRead: 'menit baca', categories: 'Kategori', all: 'Semua',
+    contactTitle: 'Kami siap membantu', contactText: 'Tinggalkan pesan, tim kami akan menghubungi Anda secepatnya.', interest: 'Keperluan', sent: 'Terkirim! Kami akan segera menghubungi Anda.',
+    notFound: 'Halaman tidak ditemukan', notFoundText: 'Maaf, halaman yang Anda cari tidak tersedia atau sudah dipindahkan.', backHome: 'Kembali ke beranda',
+    saleStamp: 'Klik untuk menghubungi', queueTitle: 'Layar Antrian', nowServing: 'Sedang dipanggil', waiting: 'menunggu', next: 'Berikutnya',
+    stepService: 'Layanan', stepDoctor: 'Dokter', stepTime: 'Jadwal', stepData: 'Data Pasien', stepConfirm: 'Konfirmasi',
+    lookupTitle: 'Cek, ubah, atau batalkan booking', bookingNo: 'Nomor booking', phoneNo: 'Nomor HP', lookup: 'Cek booking',
+  },
+  en: {
+    home: 'Home', about: 'About Us', services: 'Services', doctors: 'Doctors', schedule: 'Doctor Schedule', facilities: 'Facilities', branches: 'Branches', booking: 'Booking', pricing: 'Pricing', promos: 'Promotions', testimonials: 'Testimonials', blog: 'Health Articles', faq: 'FAQ', contact: 'Contact', privacy: 'Privacy Policy', terms: 'Terms & Conditions', checkBooking: 'Check Booking', queue: 'Queue', login: 'Sign in', portal: 'Patient Portal',
+    bookNow: 'Book Now', bookDoctor: 'Book a Doctor', seeAll: 'See all', readMore: 'Read more', from: 'from', perSession: 'per session',
+    footerLinks: 'Links', footerServices: 'Services', footerContact: 'Contact Us', newsletter: 'Health tips & offers', newsletterBtn: 'Subscribe', emailPh: 'Your email',
+    rights: 'All rights reserved.', installApp: 'Install App', whatsapp: 'WhatsApp us', emergency: 'Emergency',
+    experience: 'years of experience', education: 'Education', practiceSchedule: 'Practice Schedule', languages: 'Languages', telemedicine: 'Telemedicine', available: 'Available', consultFee: 'Consultation fee',
+    allPoli: 'All units', allBranch: 'All branches', searchDoctor: 'Search doctor…', day: 'Day', time: 'Time', noSchedule: 'No schedule yet',
+    openMap: 'Open in Google Maps', hours: 'Opening hours', phone: 'Phone', address: 'Address', doctorsHere: 'Doctors at this branch', servicesHere: 'Services at this branch',
+    priceList: 'Service price list', packages: 'Check-up packages', mostPopular: 'Most popular', choose: 'Choose package', branchPrice: 'Branch price',
+    validUntil: 'Valid until', useCode: 'Use code', writeTesti: 'Share your experience', send: 'Send', name: 'Name', message: 'Message', yourRating: 'Rating', yourStory: 'Your story',
+    related: 'Related articles', by: 'by', minutesRead: 'min read', categories: 'Categories', all: 'All',
+    contactTitle: 'We are here to help', contactText: 'Leave a message and our team will get back to you shortly.', interest: 'Subject', sent: 'Sent! We will contact you soon.',
+    notFound: 'Page not found', notFoundText: 'Sorry, the page you are looking for does not exist or has moved.', backHome: 'Back to home',
+    saleStamp: 'Click to contact', queueTitle: 'Queue Display', nowServing: 'Now serving', waiting: 'waiting', next: 'Next',
+    stepService: 'Service', stepDoctor: 'Doctor', stepTime: 'Schedule', stepData: 'Patient', stepConfirm: 'Confirm',
+    lookupTitle: 'Check, change or cancel a booking', bookingNo: 'Booking number', phoneNo: 'Phone number', lookup: 'Check booking',
+  },
+};
+export const t = (lang) => (k) => STR[lang]?.[k] ?? STR.id[k] ?? k;

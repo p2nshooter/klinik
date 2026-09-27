@@ -1,0 +1,18 @@
+{
+  "name": "global-klinik",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Global Klinik — Digital Clinic Platform & SIM Klinik on Cloudflare Workers (D1 + KV + R2)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply global-klinik-db --local",
+    "migrate:remote": "wrangler d1 migrations apply global-klinik-db --remote",
+    "hash": "node scripts/hash-password.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

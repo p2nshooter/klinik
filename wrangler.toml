@@ -1,0 +1,46 @@
+name = "global-klinik"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+preview_urls = false
+
+# BLUEPRINT.md is bundled so the admin app can always display it
+rules = [{ type = "Text", globs = ["**/*.md"], fallthrough = true }]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+html_handling = "auto-trailing-slash"
+not_found_handling = "none"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "global-klinik-db"
+database_id = "288c22b7-6e50-4e51-b0c5-a242b90e4f6f"
+migrations_dir = "migrations"
+
+# KV — content bundle, cache, queue snapshots, notifications, rate limits
+[[kv_namespaces]]
+binding = "KV"
+id = "4d412f1670c6452ab53005e94e6c72c6"
+
+# KV — login sessions
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "ba0fcc0059af493791dd7042994c0362"
+
+# R2 — CMS source of truth, media, medical documents, generated PDFs, backups
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "global-klinik-storage"
+
+[triggers]
+# hourly: reminders + SATU SEHAT queue · 17:30 UTC (00:30 WIB): incremental backup + archive
+crons = ["0 * * * *", "30 17 * * *"]
+
+[vars]
+APP_NAME = "Global Klinik"
+APP_VERSION = "1.0.0"
+
+[observability]
+enabled = true
