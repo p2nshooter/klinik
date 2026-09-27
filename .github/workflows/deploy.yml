@@ -53,6 +53,34 @@ jobs:
       - name: Deploy Worker
         run: npx wrangler deploy 2>&1 | tee deploy.log
 
+      - name: Sync Worker secrets from repository secrets
+        continue-on-error: true
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          WA_TOKEN: ${{ secrets.WA_TOKEN }}
+          WA_API_URL: ${{ secrets.WA_API_URL }}
+          WA_PHONE_ID: ${{ secrets.WA_PHONE_ID }}
+          MIDTRANS_SERVER_KEY: ${{ secrets.MIDTRANS_SERVER_KEY }}
+          MIDTRANS_IS_PRODUCTION: ${{ secrets.MIDTRANS_IS_PRODUCTION }}
+          SATUSEHAT_CLIENT_ID: ${{ secrets.SATUSEHAT_CLIENT_ID }}
+          SATUSEHAT_CLIENT_SECRET: ${{ secrets.SATUSEHAT_CLIENT_SECRET }}
+          SMS_API_URL: ${{ secrets.SMS_API_URL }}
+          SMS_API_KEY: ${{ secrets.SMS_API_KEY }}
+        run: |
+          node --input-type=module -e "
+            import { writeFileSync } from 'node:fs';
+            const names = ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASS','SMTP_FROM','WA_TOKEN','WA_API_URL','WA_PHONE_ID','MIDTRANS_SERVER_KEY','MIDTRANS_IS_PRODUCTION','SATUSEHAT_CLIENT_ID','SATUSEHAT_CLIENT_SECRET','SMS_API_URL','SMS_API_KEY'];
+            const out = Object.fromEntries(names.filter((n) => process.env[n]).map((n) => [n, process.env[n]]));
+            writeFileSync('worker-secrets.json', JSON.stringify(out));
+            console.log('Secrets to sync:', Object.keys(out).join(', ') || '(none)');
+          "
+          if [ "$(cat worker-secrets.json)" != "{}" ]; then npx wrangler secret bulk worker-secrets.json; fi
+          rm -f worker-secrets.json
+
       - name: Smoke test
         run: |
           URL=$(grep -oE 'https://[a-zA-Z0-9._-]+\.workers\.dev' deploy.log | head -1)

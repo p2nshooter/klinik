@@ -10,6 +10,7 @@ Website klinik premium + aplikasi PWA (admin, dokter, perawat, apotek, kasir, la
 - SIM Klinik lengkap: registrasi & No. RM otomatis, antrian per poli, triase, ERM/SOAP + ICD-10, tindakan, e-resep, laboratorium, farmasi FEFO, inventory (PO, opname, mutasi), billing multi-metode, refund, klaim BPJS/asuransi, laporan (Excel/CSV/PDF), dashboard.
 - Semua modul dapat di-CRUD dari Admin (registry `src/schema/entities.js`), termasuk halaman website berbasis blok, menu, peran & izin.
 - Dokumen PDF: invoice, kwitansi, hasil lab, resep, kartu pasien, bukti daftar, bukti booking, resume medis, laporan.
+- Email lewat modul SMTP bawaan (Gmail/Zoho/email hosting) — server, user & password diatur dari Admin → Pengaturan → Integrasi.
 - Keamanan: PBKDF2, sesi HttpOnly (KV), 2FA TOTP, RBAC per cabang, CSRF, CSP, rate limit, audit log, backup R2.
 - PWA: install di Android, iPhone, Windows, macOS, Linux.
 
@@ -35,5 +36,5 @@ npm run dev                      # http://localhost:8787  ·  aplikasi: /app/
 Push ke branch → GitHub Actions (`.github/workflows/deploy.yml`): cek kode → migrasi D1 → seed demo (hanya jika DB kosong) → `wrangler deploy` → smoke test.
 Secret repo: `CLOUDFLARE_API_TOKEN` dan `CLOUDFLARE_ACCOUNT_ID`.
 
-Secret Worker opsional (Cloudflare → Workers → global-klinik → Settings → Variables):
-`WA_TOKEN` (+`WA_API_URL`/`WA_PHONE_ID`), `RESEND_API_KEY`, `MIDTRANS_SERVER_KEY` (+`MIDTRANS_IS_PRODUCTION`), `SATUSEHAT_CLIENT_ID`, `SATUSEHAT_CLIENT_SECRET`, `SMS_API_URL`, `SMS_API_KEY`.
+Secret Worker opsional — isi sebagai secret repo GitHub (otomatis disalin ke Worker saat deploy) atau langsung di Cloudflare → Workers → global-klinik → Settings → Variables:
+`WA_TOKEN` (+`WA_API_URL`/`WA_PHONE_ID`), `SMTP_PASS` (+`SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_FROM`), `MIDTRANS_SERVER_KEY` (+`MIDTRANS_IS_PRODUCTION`), `SATUSEHAT_CLIENT_ID`, `SATUSEHAT_CLIENT_SECRET`, `SMS_API_URL`, `SMS_API_KEY`.

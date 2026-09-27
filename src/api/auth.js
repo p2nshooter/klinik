@@ -34,10 +34,11 @@ export async function login(ctx) {
   const username = String(body.username || '').trim().toLowerCase();
   await rateCheck(env, `login:${ctx.ip}`, 15, 900);
   await rateCheck(env, `login:u:${username}`, 8, 900);
+  await rateCheck(env, `login:d:${username}`, 30, 86400);
   const u = await findUser(env, username);
   const ok = u && u.status !== 'suspended' && (await verifyPassword(String(body.password || ''), u.password_hash));
   if (!ok) {
-    ctx.waitUntil(Promise.all([rateHit(env, `login:${ctx.ip}`, 900), rateHit(env, `login:u:${username}`, 900)]));
+    ctx.waitUntil(Promise.all([rateHit(env, `login:${ctx.ip}`, 900), rateHit(env, `login:u:${username}`, 900), rateHit(env, `login:d:${username}`, 86400)]));
     audit(ctx, 'login_failed', 'users', u?.id, username);
     throw unauthorized('Username atau password salah');
   }
@@ -49,7 +50,7 @@ export async function login(ctx) {
     }
   }
   const tok = await createSession(env, u, ctx.req);
-  ctx.waitUntil(Promise.all([run(env, 'UPDATE users SET last_login_at = ? WHERE id = ?', nowISO(), u.id), rateClear(env, `login:u:${username}`)]));
+  ctx.waitUntil(Promise.all([run(env, 'UPDATE users SET last_login_at = ? WHERE id = ?', nowISO(), u.id), rateClear(env, `login:u:${username}`), rateClear(env, `login:d:${username}`)]));
   ctx.session = { uid: u.id, username: u.username, role: u.role };
   audit(ctx, 'login', 'users', u.id);
   const bundle = await getBundle(env);

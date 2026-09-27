@@ -4,6 +4,7 @@ import { byId, cmsCreate, cmsDelete, cmsGet, cmsList, cmsReorder, cmsUpdate, get
 import { branchCode, bumpStats, computeTotals, meetUrl, refreshQueue } from '../lib/clinic.js';
 import { hashPassword, passwordProblems } from '../lib/crypto.js';
 import { audit, batch, d1Delete, d1Get, d1Insert, d1List, d1Update, insertStmt, makeNumber, nextSeq, q1, refLabels, run } from '../lib/db.js';
+import { SMTP_PASS_KEY } from '../lib/notify.js';
 import { BLOCK_TYPES, ENTITIES, GROUPS, OPTIONS, SPECIAL_PERMS } from '../schema/entities.js';
 import { badRequest, conflict, forbidden, json, localDate, notFound, readJSON } from '../lib/util.js';
 import { createPatient, createVisit, promoteWaitlist, recordPayment, settleInvoice } from './shared.js';
@@ -89,6 +90,16 @@ function scopedBranch(ctx, e, data) {
 
 // ---------------------------------------------------------------- hooks
 const HOOKS = {
+  settings: {
+    async beforeSave(ctx, data) {
+      const pass = typeof data.smtp_pass === 'string' ? data.smtp_pass.trim() : '';
+      delete data.smtp_pass;
+      if (pass) {
+        await ctx.env.KV.put(SMTP_PASS_KEY, pass);
+        audit(ctx, 'smtp_password_set', 'settings', 'main');
+      }
+    },
+  },
   users: {
     async beforeSave(ctx, data, { id, input }) {
       if (data.username) {
@@ -486,7 +497,7 @@ export async function meta(ctx) {
   for (const [n, e] of Object.entries(ENTITIES)) {
     entities[n] = { ...e, fields: e.fields.filter((f) => !f.secret) };
   }
-  return json({ entities, groups: GROUPS, options: OPTIONS, blockTypes: BLOCK_TYPES, specialPerms: SPECIAL_PERMS, bundle, env: { midtrans: !!ctx.env.MIDTRANS_SERVER_KEY, resend: !!ctx.env.RESEND_API_KEY, wa: !!ctx.env.WA_TOKEN, satusehat: !!ctx.env.SATUSEHAT_CLIENT_ID } });
+  return json({ entities, groups: GROUPS, options: OPTIONS, blockTypes: BLOCK_TYPES, specialPerms: SPECIAL_PERMS, bundle, env: { midtrans: !!ctx.env.MIDTRANS_SERVER_KEY, wa: !!ctx.env.WA_TOKEN, satusehat: !!ctx.env.SATUSEHAT_CLIENT_ID } });
 }
 
 export async function rebuild(ctx) {

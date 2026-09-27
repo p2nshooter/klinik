@@ -4,7 +4,7 @@ import blueprintText from '../../BLUEPRINT.md';
 import { canAny, requirePerm, requireStaff } from '../lib/auth.js';
 import { getBundle, rebuildBundle } from '../lib/cms.js';
 import { audit, q, q1 } from '../lib/db.js';
-import { notify } from '../lib/notify.js';
+import { notify, smtpConfig } from '../lib/notify.js';
 import { buildEncounterBundle, buildLabBundle, processQueue } from '../lib/satusehat.js';
 import { ENTITIES } from '../schema/entities.js';
 import { badRequest, forbidden, json, localDate, notFound, nowISO, readJSON, rid, slugify, unauthorized } from '../lib/util.js';
@@ -243,7 +243,7 @@ export async function status(ctx) {
   return json({
     app: env.APP_NAME, version: env.APP_VERSION, time: nowISO(), bundle_ver: bundle.ver,
     latency_ms: { d1, kv, r2 },
-    integrations: { midtrans: !!env.MIDTRANS_SERVER_KEY, resend: !!env.RESEND_API_KEY, whatsapp: !!env.WA_TOKEN, satusehat: !!env.SATUSEHAT_CLIENT_ID, sms: !!env.SMS_API_URL },
+    integrations: { midtrans: !!env.MIDTRANS_SERVER_KEY, email: !!(await smtpConfig(env, bundle.settings)), whatsapp: !!env.WA_TOKEN, satusehat: !!env.SATUSEHAT_CLIENT_ID, sms: !!env.SMS_API_URL },
     backup: await env.KV.get('backup:last', { type: 'json' }),
     storage: { d1: 'global-klinik-db', kv: ['global-klinik-kv', 'global-klinik-sessions'], r2: 'global-klinik-storage' },
   });

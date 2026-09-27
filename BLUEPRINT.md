@@ -149,7 +149,7 @@ Izin dapat diubah per peran dari **Admin → Peran & Izin** (matriks centang). P
 atau pusat (semua cabang).
 
 ### Akun awal
-Akun awal dibuat langsung di database produksi (password acak kuat, tidak disimpan di repo — hanya hash PBKDF2 di D1):
+Akun awal dibuat langsung di database produksi dengan **PIN 4 angka acak** (permintaan pemilik; tidak disimpan di repo — hanya hash PBKDF2 di D1):
 
 | Username | Peran | Halaman awal |
 |---|---|---|
@@ -166,7 +166,7 @@ Akun awal dibuat langsung di database produksi (password acak kuat, tidak disimp
 | `pasien` | Pasien demo (Budi Santoso, RM-000001) | Portal Pasien |
 
 Login bisa memakai username, email, atau No. HP.
-Password diserahkan langsung ke pemilik. **Segera ganti password & aktifkan 2FA** setelah login pertama.
+PIN diserahkan langsung ke pemilik (kartu gambar). Super Admin dapat menambah/mengubah/menghapus akun & PIN di **Admin → Pengguna**; tiap pengguna bisa mengganti PIN sendiri di **Profil**. Aturan password: minimal 4 karakter (PIN 4 angka boleh, password panjang juga boleh). Disarankan aktifkan 2FA untuk Super Admin.
 Instalasi baru tanpa pengguna otomatis membuka halaman **Setup Awal** untuk membuat Super Admin.
 
 ---
@@ -252,7 +252,7 @@ Laporan · Audit Log · Backup & Restore · SATU SEHAT · Blueprint.
 | Notifikasi in-app portal pasien & staf | ✅ |
 | WhatsApp: tombol kirim 1-klik (wa.me) untuk staf | ✅ |
 | WhatsApp otomatis via gateway (Fonnte/Wablas/WA Cloud API) | 🔌 token gateway |
-| Email (Resend) | 🔌 `RESEND_API_KEY` |
+| Email — modul SMTP bawaan (tanpa layanan pihak ketiga; pakai Gmail/Zoho/email hosting) | 🔌 isi server/user/password SMTP di Admin → Pengaturan → Integrasi |
 | SMS | 🔌 gateway SMS |
 | Push notification (Web Push/VAPID) | 🗓️ Fase 2 |
 
@@ -294,7 +294,7 @@ Booking online / datang langsung
 | CSRF | SameSite + header wajib `X-GK` + cek `Origin` pada semua request yang mengubah data |
 | SQL Injection | 100% prepared statement; nama kolom hanya dari registry skema |
 | XSS | Escape semua output, CSP ketat, Markdown aman |
-| Rate limiting | Login & form publik (KV + memori) |
+| Rate limiting | Login: 8 gagal/15 menit per akun, 30 gagal/hari per akun, 15/15 menit per IP (penting karena PIN 4 angka); form publik (KV + memori) |
 | Audit log | Semua create/update/delete/login/unduh dokumen sensitif |
 | Akses file | Dokumen medis di R2 hanya dapat diakses pemilik & peran berwenang |
 | Backup & DR | Backup inkremental harian D1 → R2, D1 Time Travel 30 hari, ekspor manual, restore Super Admin |
@@ -325,7 +325,7 @@ Aplikasi terbuka layar penuh, punya ikon sendiri, shortcut (Booking, Portal, Ant
 | Nama klinik final, alamat, no. telepon/WA, email, jam operasional | Mengganti data contoh |
 | Foto klinik, dokter, fasilitas | Upload di Admin → Media (tersimpan di R2) |
 | Token gateway WhatsApp (Fonnte/Wablas/WA Cloud API) | Notifikasi WA otomatis |
-| `RESEND_API_KEY` + domain email | Email otomatis |
+| Akun email pengirim (mis. Gmail + App Password) — diisi di Admin → Pengaturan → Integrasi | Email otomatis (modul SMTP bawaan) |
 | `MIDTRANS_SERVER_KEY` / `MIDTRANS_CLIENT_KEY` | VA, e-wallet, kartu |
 | SATU SEHAT: Client ID, Client Secret, Organization ID | Kirim data FHIR |
 | Kredensial BPJS (cons-id, secret, user key) | Bridging VClaim/PCare |
@@ -345,3 +345,4 @@ Aplikasi terbuka layar penuh, punya ikon sendiri, shortcut (Booking, Portal, Ant
 | 2026-09-27 | Blueprint v1 disusun; resource Cloudflare dibuat; implementasi Fase 1 dimulai |
 | 2026-09-28 | Fase 1 selesai: website SSR, PWA (admin/dokter/perawat/apotek/kasir/lab/portal), 45 modul CRUD, PDF, laporan, backup R2, deploy otomatis via GitHub Actions; 51 uji alur kerja end-to-end lulus |
 | 2026-09-28 | Live di https://global-klinik.app-desa.workers.dev — migrasi D1 + data demo + 11 akun awal terpasang; smoke test semua halaman 200 |
+| 2026-09-28 | Login pakai PIN 4 angka (bisa di-CRUD Super Admin) + kunci akun berlapis; email lewat modul SMTP buatan sendiri (Resend dihapus); secret repo otomatis disalin ke Worker saat deploy |

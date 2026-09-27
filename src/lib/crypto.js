@@ -48,8 +48,8 @@ export async function verifyPassword(password, stored) {
 
 export function passwordProblems(pw) {
   const p = String(pw || '');
-  if (p.length < 8) return 'Password minimal 8 karakter';
-  if (!/[a-zA-Z]/.test(p) || !/\d/.test(p)) return 'Password harus mengandung huruf dan angka';
+  if (p.length < 4) return 'Password minimal 4 karakter (boleh PIN 4 angka)';
+  if (p.length > 128) return 'Password maksimal 128 karakter';
   return null;
 }
 

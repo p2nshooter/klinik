@@ -1,5 +1,6 @@
-// Notifications: in-app (KV), WhatsApp (gateway or one-click wa.me link), Email (Resend), SMS (generic HTTP).
+// Notifications: in-app (KV), WhatsApp (gateway or one-click wa.me link), Email (built-in SMTP client), SMS (generic HTTP).
 import { getBundle } from './cms.js';
+import { sendMail } from './smtp.js';
 import { fmtDate, money, normPhone, nowISO, tr } from './util.js';
 
 const T = {
@@ -60,14 +61,28 @@ async function sendWA(env, settings, phone, text) {
   return { status: 'manual', link };
 }
 
+export const SMTP_PASS_KEY = 'secret:smtp_pass';
+
+/** SMTP settings: host/port/user/sender from Admin -> Pengaturan (or env), password from Worker secret SMTP_PASS or the admin-saved KV value. */
+export async function smtpConfig(env, s = {}) {
+  const host = s.smtp_host || env.SMTP_HOST;
+  const user = s.smtp_user || env.SMTP_USER || '';
+  const pass = env.SMTP_PASS || (user ? await env.KV.get(SMTP_PASS_KEY) : '') || '';
+  const from = s.email_from || env.SMTP_FROM || user;
+  if (!host || !from || (user && !pass)) return null;
+  return { host, port: Number(s.smtp_port || env.SMTP_PORT) || 465, user, pass, from, fromName: s.clinic_name || 'Global Klinik' };
+}
+
 async function sendEmail(env, settings, to, subject, text) {
-  if (!to || !env.RESEND_API_KEY || !settings.email_from) return { status: 'skipped' };
+  const cfg = to ? await smtpConfig(env, settings) : null;
+  if (!cfg) return { status: 'skipped' };
+  const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:16px"><h2 style="color:#0F766E;margin:0 0 12px">${settings.clinic_name}</h2><p style="white-space:pre-line;color:#0f172a;line-height:1.6">${text.replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c])}</p><p style="color:#64748b;font-size:12px">${settings.address || ''}</p></div>`;
   try {
-    const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:16px"><h2 style="color:#0F766E;margin:0 0 12px">${settings.clinic_name}</h2><p style="white-space:pre-line;color:#0f172a;line-height:1.6">${text.replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c])}</p><p style="color:#64748b;font-size:12px">${settings.address || ''}</p></div>`;
-    const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' }, body: JSON.stringify({ from: `${settings.clinic_name} <${settings.email_from}>`, to: [to], subject, html, text }) });
-    return { status: r.ok ? 'sent' : 'failed' };
-  } catch {
-    return { status: 'failed' };
+    await sendMail(cfg, { to, subject, text, html });
+    return { status: 'sent' };
+  } catch (e) {
+    console.error('email', e.message);
+    return { status: 'failed', error: 'SMTP: ' + e.message };
   }
 }
 
@@ -101,7 +116,7 @@ export async function notify(env, { template, data, phone, email, patientId, ref
   }
   if (channels.includes('email') && email) {
     const r = await sendEmail(env, settings, email, `${subject} — ${settings.clinic_name}`, text);
-    if (r.status !== 'skipped') logs.push(['email', email, r.status, '']);
+    if (r.status !== 'skipped') logs.push(['email', email, r.status, r.error || '']);
   }
   if (channels.includes('inapp') && patientId) {
     await pushInApp(env, patientId, { title: subject, body: text, template, ref });
