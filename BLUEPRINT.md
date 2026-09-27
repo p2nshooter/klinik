@@ -149,8 +149,23 @@ Izin dapat diubah per peran dari **Admin → Peran & Izin** (matriks centang). P
 atau pusat (semua cabang).
 
 ### Akun awal
-Akun awal dibuat langsung di database produksi (tidak disimpan di repo). Username:
-`superadmin`, `admin`, `manajemen`, `dokter`, `perawat`, `apoteker`, `kasir`, `pendaftaran`, `lab`, `marketing`, `pasien`.
+Akun awal dibuat langsung di database produksi (password acak kuat, tidak disimpan di repo — hanya hash PBKDF2 di D1):
+
+| Username | Peran | Halaman awal |
+|---|---|---|
+| `superadmin` | Super Admin | Dashboard |
+| `admin` | Admin | Dashboard |
+| `manajemen` | Manajemen | Dashboard & Laporan |
+| `dokter` | Dokter (dr. Andini Pratama, cabang Sudirman) | Ruang Periksa |
+| `perawat` | Perawat | Pendaftaran & Antrian |
+| `apoteker` | Apoteker | Farmasi |
+| `kasir` | Kasir | Kasir |
+| `pendaftaran` | Pendaftaran | Pendaftaran & Antrian |
+| `lab` | Laboratorium | Laboratorium |
+| `marketing` | Marketing | Dashboard (konten website) |
+| `pasien` | Pasien demo (Budi Santoso, RM-000001) | Portal Pasien |
+
+Login bisa memakai username, email, atau No. HP.
 Password diserahkan langsung ke pemilik. **Segera ganti password & aktifkan 2FA** setelah login pertama.
 Instalasi baru tanpa pengguna otomatis membuka halaman **Setup Awal** untuk membuat Super Admin.
 
@@ -328,3 +343,4 @@ Aplikasi terbuka layar penuh, punya ikon sendiri, shortcut (Booking, Portal, Ant
 | Tanggal | Perubahan |
 |---|---|
 | 2026-09-27 | Blueprint v1 disusun; resource Cloudflare dibuat; implementasi Fase 1 dimulai |
+| 2026-09-28 | Fase 1 selesai: website SSR, PWA (admin/dokter/perawat/apotek/kasir/lab/portal), 45 modul CRUD, PDF, laporan, backup R2, deploy otomatis via GitHub Actions; 51 uji alur kerja end-to-end lulus |

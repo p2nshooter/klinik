@@ -41,6 +41,7 @@ jobs:
         run: npx wrangler d1 migrations apply global-klinik-db --remote
 
       - name: Seed demo data (only when the database is empty)
+        continue-on-error: true
         run: |
           N=$(npx wrangler d1 execute global-klinik-db --remote --command "SELECT COUNT(*) AS n FROM patients" --json 2>/dev/null | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{console.log(JSON.parse(s)[0].results[0].n)}catch(e){console.log('unknown')}})")
           echo "patients in database: $N"

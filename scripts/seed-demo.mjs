@@ -1,7 +1,7 @@
 // Generates seed/demo.sql — realistic demo data (patients, medicines & stock, 14 days of visits, invoices,
 // payments, today's queue, upcoming bookings) so dashboards and reports look alive for a showcase.
 // Usage: node scripts/seed-demo.mjs   → then apply with wrangler d1 execute (local or --remote).
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 
 let seed = 20260927;
 const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
@@ -238,5 +238,6 @@ appt(addDays(today, 1), '09:00', P(19), 'dr-hendra', 'dalam', 'jkt', 'waitlist')
 // counters
 for (const [key, value] of Object.entries(counters)) out.push(`INSERT INTO counters (key, value) VALUES (${q(key)}, ${value}) ON CONFLICT(key) DO UPDATE SET value = excluded.value;`);
 
+mkdirSync(new URL('../seed/', import.meta.url), { recursive: true });
 writeFileSync(new URL('../seed/demo.sql', import.meta.url), `-- Demo data generated ${new Date().toISOString()} for ${today}\n` + out.join('\n') + '\n');
 console.log(`seed/demo.sql: ${out.length} statements · ${vid} visits · ${invid} invoices · ${NP} patients · today=${today}`);
